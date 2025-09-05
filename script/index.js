@@ -15,21 +15,44 @@ const displayLevelWord = (words) => {
   const wordContainer = document.getElementById("word-container");
   wordContainer.innerHTML = "";
 
-  /**
-   * {
-    "id": 107,
-    "level": 2,
-    "word": "Talk",
-    "meaning": "কথা বলা",
-    "pronunciation": "টক"
-}
-   */
+  if (words.length === 0) {
+    wordContainer.innerHTML = `
+      <div class="col-span-full rounded py-4 space-y-2 text-center">
+          <img class="mx-auto" src="./assets/alert-error.png" alt="">
+          <p class="font-bangla text-lg font-medium text-gray-500 ">
+            এই Lesson এ এখনো কোন Vocabulary যুক্ত করা হয়নি।
+          </p>
+          <h2 class="font-bangla text-4xl font-semibold">নেক্সট Lesson এ যান</h2>
+        </div>
+    `;
+  }
 
   words.forEach((word) => {
     const card = document.createElement("div");
     card.innerHTML = `
-      
+      <div
+          class="bg-white rounded-xl shadow-sm text-center py-8 px-3 space-y-3 flex-1 items-stretch"
+        >
+        <h2 class="text-2xl font-bold">${
+          word.word ? word.word : "শব্দ পাওয়া যায়নি"
+        }</h2>
+          <p>Meaning /Pronounciation</p>
+          <span class="font-bangla text-2xl font-medium"
+            >"${word.meaning ? word.meaning : "অর্থ পাওয়া যায়নি"} / ${
+      word.pronunciation ? word.pronunciation : "উচ্চারণ পাওয়া যায়নি"
+    }"</span
+          >
+          <div class="flex justify-between items-center mt-6">
+            <button class="btn p-3 rounded-2xl bg-gray-200">
+              <i class="fa-solid fa-circle-info"></i>
+            </button>
+            <button class="btn p-3 rounded-2xl bg-gray-200">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+        </div>
     `;
+    wordContainer.appendChild(card);
   });
 };
 
