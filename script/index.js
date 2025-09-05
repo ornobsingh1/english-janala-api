@@ -21,6 +21,60 @@ const loadLevelWord = (id) => {
     });
 };
 
+const loadWordDetail = async (id) => {
+  const res = await fetch(
+    `https://openapi.programming-hero.com/api/word/${id}`
+  );
+  const details = await res.json();
+  displayWordDetails(details.data);
+};
+
+const displayWordDetails = (word) => {
+  /**
+   * {
+    "word": "Eager",
+    "meaning": "আগ্রহী",
+    "pronunciation": "ইগার",
+    "level": 1,
+    "sentence": "The kids were eager to open their gifts.",
+    "points": 1,
+    "partsOfSpeech": "adjective",
+    "synonyms": [
+        "enthusiastic",
+        "excited",
+        "keen"
+    ],
+    "id": 5
+}
+   */
+  const detailsContainer = document.getElementById("details-container");
+  detailsContainer.innerHTML = `
+    <div class="">
+              <h2 class="text-2xl font-bold font-bangla">
+                ${word.word} ( <i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})
+              </h2>
+            </div>
+            <div class="">
+              <h2 class="text-xl font-bold font-bangla">Meaning</h2>
+              <p class="font-bangla text-lg">${word.meaning}</p>
+            </div>
+            <div class="">
+              <h2 class="text-xl font-bold font-bangla">Example</h2>
+              <p class="font-bangla text-lg">${word.sentence}</p>
+            </div>
+            <div class="">
+              <h2 class="text-xl font-bangla mb-2">সমার্থক শব্দ গুলো</h2>
+              <div class="flex items-center gap-4">
+                <span class="btn bg-sky-100">Enthusiastic</span>
+                <span class="btn bg-sky-100">Enthusiastic</span>
+                <span class="btn bg-sky-100">Enthusiastic</span>
+              </div>
+            </div>
+  `;
+
+  document.getElementById("word_modal").showModal();
+};
+
 const displayLevelWord = (words) => {
   const wordContainer = document.getElementById("word-container");
   wordContainer.innerHTML = "";
@@ -53,7 +107,9 @@ const displayLevelWord = (words) => {
     }"</span
           >
           <div class="flex justify-between items-center mt-6">
-            <button onclick="my_modal_5.showModal()" class="btn p-3 rounded-2xl bg-gray-200">
+            <button onclick="loadWordDetail(${
+              word.id
+            })" class="btn p-3 rounded-2xl bg-gray-200">
               <i class="fa-solid fa-circle-info"></i>
             </button>
             <button class="btn p-3 rounded-2xl bg-gray-200">
