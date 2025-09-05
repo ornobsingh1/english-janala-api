@@ -1,3 +1,20 @@
+const createElements = (arr) => {
+  const htmlElements = arr.map(
+    (el) => `<span class="btn bg-sky-100">${el}</span>`
+  );
+  return htmlElements.join(" ");
+};
+
+const manageSpinner = (status) => {
+  if (status === true) {
+    document.getElementById("spinner").classList.remove("hidden");
+    document.getElementById("word-container").classList.add("hidden");
+  } else {
+    document.getElementById("spinner").classList.add("hidden");
+    document.getElementById("word-container").classList.remove("hidden");
+  }
+};
+
 const loadLessons = () => {
   fetch("https://openapi.programming-hero.com/api/levels/all")
     .then((res) => res.json())
@@ -10,6 +27,8 @@ const removeActive = () => {
 };
 
 const loadLevelWord = (id) => {
+  manageSpinner(true);
+
   fetch(`https://openapi.programming-hero.com/api/level/${id}`)
     .then((res) => res.json())
     .then((data) => {
@@ -30,28 +49,13 @@ const loadWordDetail = async (id) => {
 };
 
 const displayWordDetails = (word) => {
-  /**
-   * {
-    "word": "Eager",
-    "meaning": "আগ্রহী",
-    "pronunciation": "ইগার",
-    "level": 1,
-    "sentence": "The kids were eager to open their gifts.",
-    "points": 1,
-    "partsOfSpeech": "adjective",
-    "synonyms": [
-        "enthusiastic",
-        "excited",
-        "keen"
-    ],
-    "id": 5
-}
-   */
   const detailsContainer = document.getElementById("details-container");
   detailsContainer.innerHTML = `
     <div class="">
               <h2 class="text-2xl font-bold font-bangla">
-                ${word.word} ( <i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})
+                ${word.word} ( <i class="fa-solid fa-microphone-lines"></i> :${
+    word.pronunciation
+  })
               </h2>
             </div>
             <div class="">
@@ -64,11 +68,9 @@ const displayWordDetails = (word) => {
             </div>
             <div class="">
               <h2 class="text-xl font-bangla mb-2">সমার্থক শব্দ গুলো</h2>
-              <div class="flex items-center gap-4">
-                <span class="btn bg-sky-100">Enthusiastic</span>
-                <span class="btn bg-sky-100">Enthusiastic</span>
-                <span class="btn bg-sky-100">Enthusiastic</span>
-              </div>
+              <div class="flex items-center gap-4">${createElements(
+                word.synonyms
+              )}</div>
             </div>
   `;
 
@@ -89,6 +91,8 @@ const displayLevelWord = (words) => {
           <h2 class="font-bangla text-4xl font-semibold">নেক্সট Lesson এ যান</h2>
         </div>
     `;
+    manageSpinner(false);
+    return;
   }
 
   words.forEach((word) => {
@@ -120,6 +124,7 @@ const displayLevelWord = (words) => {
     `;
     wordContainer.appendChild(card);
   });
+  manageSpinner(false);
 };
 
 const displayLessons = (lessons) => {
